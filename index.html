@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Sammy Rizitos 💕</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            overflow-x: hidden;
+            background: #1a1a2e;
+        }
+
+        /* Pantalla de inicio */
+        #intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 1.5s ease, visibility 1.5s ease;
+        }
+
+        #intro-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* Corazón titilante */
+        .heart-button {
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 0 60px rgba(255, 107, 157, 0.6);
+            animation: heartbeat 1.5s infinite, glow 2s infinite alternate;
+            transition: transform 0.3s ease;
+            position: relative;
+            border: none;
+        }
+
+        .heart-button:hover {
+            transform: scale(1.1);
+        }
+
+        .heart-button::before {
+            content: '❤';
+            font-size: 80px;
+            color: white;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.8));
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.15); }
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 60px rgba(255, 107, 157, 0.6); }
+            to { box-shadow: 0 0 100px rgba(255, 107, 157, 0.9), 0 0 150px rgba(255, 107, 157, 0.4); }
+        }
+
+        .intro-text {
+            margin-top: 40px;
+            color: white;
+            font-family: 'Pacifico', cursive;
+            font-size: 2em;
+            text-align: center;
+            animation: fadeInUp 2s ease;
+            text-shadow: 0 0 20px rgba(255,255,255,0.5);
+        }
+
+        .intro-subtext {
+            margin-top: 15px;
+            color: #ffb6c1;
+            font-size: 1.2em;
+            font-weight: 300;
+            animation: fadeInUp 2s ease 0.5s both;
+        }
+
+        /* Contenido principal (inicialmente oculto) */
+        #main-content {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1.5s ease 0.5s;
+            position: relative;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #ffeef8 0%, #ffe4e1 50%, #f0e6ff 100%);
+        }
+
+        #main-content.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Canvas de partículas */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeInDown 1.5s ease;
+        }
+
+        h1 {
+            font-family: 'Pacifico', cursive;
+            font-size: 3.5em;
+            background: linear-gradient(45deg, #ff6b9d, #c44569, #f8b500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.5em;
+            color: #666;
+            font-weight: 300;
+            margin-top: 10px;
+        }
+
+        .date-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 30px;
+            border-radius: 50px;
+            margin-top: 20px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Love Message */
+        .love-message {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 40px;
+            margin-bottom: 50px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            border: 2px solid rgba(255, 182, 193, 0.3);
+            animation: fadeIn 2s ease;
+        }
+
+        .love-message p {
+            font-size: 1.3em;
+            color: #555;
+            line-height: 1.8;
+            font-weight: 500;
+        }
+
+        .highlight {
+            color: #ff6b9d;
+            font-weight: 700;
+        }
+
+        /* Pets Section */
+        .pets-section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-family: 'Pacifico', cursive;
+            font-size: 2.5em;
+            text-align: center;
+            color: #764ba2;
+            margin-bottom: 40px;
+        }
+
+        .pets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .pet-card {
+            background: white;
+            border-radius: 25px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            border: 3px solid transparent;
+        }
+
+        .pet-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            border-color: #ffb6c1;
+        }
+
+        .pet-photo-container {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+
+        .pet-card:hover .pet-photo-container {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .pet-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .fernanda .pet-photo-container { border-color: #ff6b6b; }
+        .lana .pet-photo-container { border-color: #feca57; }
+        .shary .pet-photo-container { border-color: #48dbfb; }
+        .gigi .pet-photo-container { border-color: #ff9ff3; }
+        .duckie .pet-photo-container { border-color: #54a0ff; }
+
+        .fernanda { border-top: 5px solid #ff6b6b; }
+        .lana { border-top: 5px solid #feca57; }
+        .shary { border-top: 5px solid #48dbfb; }
+        .gigi { border-top: 5px solid #ff9ff3; }
+        .duckie { border-top: 5px solid #54a0ff; }
+
+        .pet-name {
+            font-family: 'Pacifico', cursive;
+            font-size: 1.8em;
+            color: #ff6b9d;
+            margin-bottom: 10px;
+        }
+
+        .pet-type {
+            font-size: 0.9em;
+            color: #888;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        .pet-message {
+            font-size: 1em;
+            color: #666;
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        /* Love Letter */
+        .love-letter {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-radius: 30px;
+            padding: 50px;
+            margin-bottom: 50px;
+            box-shadow: 0 15px 50px rgba(252, 182, 159, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .love-letter h2 {
+            font-family: 'Pacifico', cursive;
+            color: #d63031;
+            font-size: 2.2em;
+            margin-bottom: 25px;
+        }
+
+        .love-letter p {
+            color: #5a3d3d;
+            font-size: 1.2em;
+            line-height: 2;
+            margin-bottom: 15px;
+        }
+
+        .signature {
+            text-align: right;
+            margin-top: 30px;
+            font-family: 'Pacifico', cursive;
+            font-size: 1.5em;
+            color: #d63031;
+        }
+
+        /* Surprise Button */
+        .surprise-btn {
+            display: block;
+            margin: 40px auto;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(245, 87, 108, 0.4);
+            transition: all 0.3s;
+        }
+
+        .surprise-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(245, 87, 108, 0.6);
+        }
+
+        .hidden-message {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-top: 20px;
+            text-align: center;
+            animation: fadeIn 1s ease;
+            border: 3px solid #ff6b9d;
+        }
+
+        .hidden-message.show {
+            display: block;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+            font-size: 1.1em;
+        }
+
+        .heart-beat {
+            display: inline-block;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5em; }
+            .intro-text { font-size: 1.5em; }
+            .pets-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <!-- Audio (invisible) -->
+    <audio id="bg-music" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Pantalla de inicio -->
+    <div id="intro-screen">
+        <div class="heart-button" onclick="openSurprise()"></div>
+        <div class="intro-text">Una sorpresa para ti</div>
+        <div class="intro-subtext">Toca el corazón ❤</div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div id="main-content">
+        <canvas id="particles-canvas"></canvas>
+        
+        <div class="container">
+            <header>
+                <h1>✨ Sammy Rizitos ✨</h1>
+                <p class="subtitle">La mejor mamá del mundo virtual</p>
+                <div class="date-badge">💐 Feliz Día de la Madre 💐</div>
+            </header>
+
+            <div class="love-message">
+                <p>
+                    Aunque aún no tengamos hijos humanos, ya eres la <span class="highlight">mejor mamá</span> que Fernanda, Lana, Shary, Gigi y Duckie podrían pedir. 
+                    Cuidas de ellos en Widgetable con tanto amor que me demuestras cada día lo increíble que serás cuando seamos papás de verdad. 
+                    ¡Esta familia virtual es solo el comienzo de nuestra hermosa historia! 🥰
+                </p>
+            </div>
+
+            <section class="pets-section">
+                <h2 class="section-title">🐾 Nuestra Familia Widgetable 🐾</h2>
+                
+                <div class="pets-grid">
+                    <div class="pet-card fernanda">
+                        <div class="pet-photo-container">
+                            <img src="fernanda.png" alt="Fernanda" class="pet-photo">
+                        </div>
+                        <h3 class="pet-name">Fernanda</h3>
+                        <p class="pet-type">La Zorrita Jugetona</p>
+                        <p class="pet-message">"Mamá Sammy, gracias por alimentarme. Eres la mejor cazadora del mundo (Cazando a Papi especialmente)."</p>
+                    </div>
+
+                    <div class="pet-card lana">
+                        <div class="pet-photo-container">
+                            <img src="lana.png" alt="Lana" class="pet-photo">
+                        </div>
+                        <h3 class="pet-name">Lana</h3>
+                        <p class="pet-type">La Gatita Mimosa</p>
+                        <p class="pet-message">"Ronroneo de felicidad cada vez que me acaricias. Mamita Rizitos tiene el corazón más calentito."</p>
+                    </div>
+
+                    <div class="pet-card shary">
+                        <div class="pet-photo-container">
+                            <img src="shary.png" alt="Shary" class="pet-photo">
+                        </div>
+                        <h3 class="pet-name">Shary</h3>
+                        <p class="pet-type">El Tiburón Dulce</p>
+                        <p class="pet-message">"Aunque parezca fiero, soy un tiburón sensible. Mamá Sammy nada en mi corazón siempre"</p>
+                    </div>
+
+                    <div class="pet-card gigi">
+                        <div class="pet-photo-container">
+                            <img src="gigi.png" alt="Gigi" class="pet-photo">
+                        </div>
+                        <h3 class="pet-name">Gigi</h3>
+                        <p class="pet-type">La Pingüina Elegante</p>
+                        <p class="pet-message">"Desde el polo sur hasta tu pantalla, mi amor por ti no tiene fronteras. Waddle waddle, mamá!"</p>
+                    </div>
+
+                    <div class="pet-card duckie">
+                        <div class="pet-photo-container">
+                            <img src="duckie.png" alt="Duckie" class="pet-photo">
+                        </div>
+                        <h3 class="pet-name">Duckie</h3>
+                        <p class="pet-type">El Patito Quack</p>
+                        <p class="pet-message">"Quack quack! (Traducción: Sammy es la mamá más espectacular del universo)"</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="love-letter">
+                <h2>Para mi futura esposa y mamá de hijos...</h2>
+                <p>
+                    Sammy Rizitos,
+                </p>
+                <p>
+                    Ver cómo cuidas a Fernanda, Lana, Shary, Gigi y Duckie me hace imaginarte siendo la mamá más tierna, paciente y divertida de nuestros futuros hijos. 
+                    Cada vez que alimentas a esas mascotas virtuales, estás practicando para cuando tengamos que cambiar pañales reales (¡jadkajslkdja!).
+                </p>
+                <p>
+                    Me encanta que seamos "papás" juntos en Widgetable, porque cada notificación que recibo de que nuestra zorrita tiene hambre o que nuestro tiburón quiere jugar, 
+                    me recuerda que estamos construyendo algo hermoso, paso a paso, widget por widget.
+                </p>
+                <p>
+                    Gracias por ser mi compañera en este juego de la vida, tanto en lo virtual como en lo real. 
+                    Eres la mamá más adorable del mundo digital, y serás la mamá más increíble del mundo físico cuando llegue el momento.
+                </p>
+                <p>
+                    Feliz Día de la Madre, mi amor. Nuestra familia de 5 bebes y yo te adoramos. 🐾💕
+                </p>
+                <div class="signature">
+                    Con todo mi amor,<br>
+                    Tu esposo de widgets y de vida
+                </div>
+            </section>
+
+            <button class="surprise-btn" onclick="revealSurprise()">
+                🎁 Mensaje secreto de los bebes que también aman bities 🎁
+            </button>
+            
+            <div id="surpriseMessage" class="hidden-message">
+                <h3 style="color: #ff6b9d; font-family: 'Pacifico', cursive; font-size: 1.8em; margin-bottom: 15px;">
+                    🐾 Mensaje de la Manada 🐾
+                </h3>
+                <p style="font-size: 1.2em; color: #555; line-height: 1.8;">
+                    "Mamá Sammy: Aunque seamos solo bebes en una pantallita, el amor que sentimos cuando nos cuidas es 100% real. 
+                    Gracias por no dejarnos morir de hambre. 
+                    Eres nuestra persona favorita en todo el widget-verso. 
+                    ¡Prometemos portarnos bien (bueno, Fernanda promete intentarlo)!"
+                </p>
+                <p style="margin-top: 15px; font-size: 2em;">🦊🐱🦈🐧🦆</p>
+            </div>
+
+            <footer>
+                <p>Hecho con <span class="heart-beat">💖</span> para la mamá más rizada y preciosa del mundo</p>
+                <p style="margin-top: 10px; font-size: 0.9em; opacity: 0.8;">
+                    Por nuestra familia en Widgetable.. Te Amo Mucho Mi Amorcito. 💓
+                </p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        function openSurprise() {
+            const intro = document.getElementById('intro-screen');
+            const main = document.getElementById('main-content');
+            const music = document.getElementById('bg-music');
+            
+            intro.classList.add('hidden');
+            
+            setTimeout(() => {
+                main.classList.add('visible');
+            }, 500);
+            
+            music.volume = 0.5;
+            music.play().catch(e => console.log('Autoplay blocked:', e));
+            
+            initParticles();
+        }
+
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let mouse = { x: null, y: null };
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 5 + 2;
+                this.speedX = Math.random() * 1 - 0.5;
+                this.speedY = Math.random() * 1 - 0.5;
+                this.opacity = Math.random() * 0.5 + 0.2;
+                
+                const colors = [
+                    'rgba(255, 182, 193,',
+                    'rgba(221, 160, 221,',
+                    'rgba(173, 216, 230,',
+                    'rgba(255, 218, 185,',
+                    'rgba(152, 251, 152,',
+                    'rgba(255, 255, 224,'
+                ];
+                this.colorBase = colors[Math.floor(Math.random() * colors.length)];
+                
+                this.shape = Math.floor(Math.random() * 4);
+                this.rotation = Math.random() * Math.PI * 2;
+                this.rotationSpeed = (Math.random() - 0.5) * 0.02;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.rotation += this.rotationSpeed;
+
+                if (this.x > canvas.width) this.x = 0;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                if (this.y < 0) this.y = canvas.height;
+
+                if (mouse.x != null) {
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 150) {
+                        const force = (150 - distance) / 150;
+                        this.speedX -= (dx / distance) * force * 0.3;
+                        this.speedY -= (dy / distance) * force * 0.3;
+                    }
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation);
+                ctx.fillStyle = this.colorBase + this.opacity + ')';
+                ctx.strokeStyle = this.colorBase + (this.opacity * 0.5) + ')';
+                ctx.lineWidth = 1;
+
+                switch(this.shape) {
+                    case 0:
+                        ctx.beginPath();
+                        ctx.arc(0, 0, this.size, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.stroke();
+                        break;
+                        
+                    case 1:
+                        ctx.beginPath();
+                        for (let i = 0; i < 4; i++) {
+                            ctx.rotate(Math.PI / 2);
+                            ctx.moveTo(0, 0);
+                            ctx.lineTo(0, -this.size * 2);
+                            ctx.lineTo(this.size * 0.5, -this.size * 0.5);
+                            ctx.lineTo(this.size * 2, 0);
+                            ctx.lineTo(this.size * 0.5, this.size * 0.5);
+                            ctx.lineTo(0, this.size * 2);
+                        }
+                        ctx.fill();
+                        break;
+                        
+                    case 2:
+                        ctx.beginPath();
+                        for (let i = 0; i < 6; i++) {
+                            const angle = (Math.PI / 3) * i;
+                            const x = Math.cos(angle) * this.size;
+                            const y = Math.sin(angle) * this.size;
+                            if (i === 0) ctx.moveTo(x, y);
+                            else ctx.lineTo(x, y);
+                        }
+                        ctx.closePath();
+                        ctx.fill();
+                        ctx.stroke();
+                        break;
+                        
+                    case 3:
+                        const s = this.size * 0.8;
+                        ctx.beginPath();
+                        ctx.moveTo(0, s * 0.3);
+                        ctx.bezierCurveTo(-s * 0.5, -s * 0.3, -s, s * 0.3, 0, s);
+                        ctx.bezierCurveTo(s, s * 0.3, s * 0.5, -s * 0.3, 0, s * 0.3);
+                        ctx.fill();
+                        break;
+                }
+                
+                ctx.restore();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            const numberOfParticles = Math.min(80, (canvas.width * canvas.height) / 10000);
+            for (let i = 0; i < numberOfParticles; i++) {
+                particles.push(new Particle());
+            }
+            animateParticles();
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 120) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(255, 182, 193, ${0.15 * (1 - distance / 120)})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+            }
+            
+            requestAnimationFrame(animateParticles);
+        }
+
+        function revealSurprise() {
+            const message = document.getElementById('surpriseMessage');
+            message.classList.toggle('show');
+            
+            if (message.classList.contains('show')) {
+                for (let i = 0; i < 30; i++) {
+                    setTimeout(() => {
+                        const confetti = document.createElement('div');
+                        confetti.textContent = ['✦', '✧', '⋆', '✴', '✷'][Math.floor(Math.random() * 5)];
+                        confetti.style.position = 'fixed';
+                        confetti.style.left = Math.random() * 100 + '%';
+                        confetti.style.top = '-50px';
+                        confetti.style.fontSize = '20px';
+                        confetti.style.color = ['#ff6b9d', '#feca57', '#48dbfb', '#ff9ff3'][Math.floor(Math.random() * 4)];
+                        confetti.style.zIndex = '9999';
+                        confetti.style.pointerEvents = 'none';
+                        confetti.style.animation = 'float 3s linear forwards';
+                        document.body.appendChild(confetti);
+                        setTimeout(() => confetti.remove(), 3000);
+                    }, i * 50);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
